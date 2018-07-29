@@ -21,6 +21,8 @@ void setup() {
   bluetooth.begin(115200);
   bluetooth.println("Hello world (BT)");
 
+  backWheel.setEnable(false
+  );
 
 }
 

@@ -7,6 +7,8 @@ MotorDriveWheel::MotorDriveWheel(int pin, int speed) {
 
   m_direction = DRIVE_STOP;
 
+  m_enable = true;
+
   setSpeed(speed);
 
 }
@@ -29,6 +31,11 @@ void MotorDriveWheel::setDirection(int direction) {
   update();
 }
 
+void MotorDriveWheel::setEnable(bool enable){
+  m_enable = enable;
+  update();
+}
+
 void MotorDriveWheel::update() {
   int setting;
 
@@ -43,6 +50,9 @@ void MotorDriveWheel::update() {
       setting = RELEASE;
       break;
   }
+
+  if(m_enable == false)
+    setting = RELEASE;
 
   m_motor->run(setting);
 
