@@ -11,8 +11,8 @@ SoftwareSerial bluetooth(rxPin, txPin); // RX, TX
 String message; // sent message
 
 MotorSteerWheel steeringMotor(1, 255);
-MotorDriveWheel frontWheel(2,255);
-MotorDriveWheel backWheel(4,255);
+MotorDriveWheel frontWheel(2, 255);
+MotorDriveWheel backWheel(4, 255);
 
 void setup() {
   Serial.begin(115200);
@@ -20,9 +20,6 @@ void setup() {
 
   bluetooth.begin(115200);
   bluetooth.println("Hello world (BT)");
-
-  backWheel.setEnable(false
-  );
 
 }
 
@@ -39,19 +36,31 @@ void loop() {
     return;
   Serial.println(message);
 
-  if(message == "left"){
+  if (message == "left") {
     steeringMotor.setDirection(STEER_LEFT);
-  }else if(message == "right"){
+  } else if (message == "right") {
     steeringMotor.setDirection(STEER_RIGHT);
   }
 
-  if(message == "up"){
+  if (message == "up") {
     frontWheel.setDirection(DRIVE_FORWARD);
     backWheel.setDirection(DRIVE_FORWARD);
-  }else if(message == "down"){
+  } else if (message == "down") {
     frontWheel.setDirection(DRIVE_BACKWARD);
     backWheel.setDirection(DRIVE_BACKWARD);
   }
 
+  if (message == "disable_front") {
+    frontWheel.setEnable(false);
+  } else if (message == "enable_front") {
+    frontWheel.setEnable(true);
+  }
+
+
+  if (message == "disable_back") {
+    backWheel.setEnable(false);
+  } else if (message == "enable_back") {
+    backWheel.setEnable(true);
+  }
 
 }
