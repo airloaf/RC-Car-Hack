@@ -44,7 +44,6 @@ public class BluetoothDeviceList extends ListFragment implements ListView.OnItem
         // Try to cast the activity as Bluetooth device selection listener
         try{
             mListener = (BluetoothDeviceSelectedListener) context;
-            mListener.onBluetoothDeviceSelected("wew");
         }catch(ClassCastException e){
             throw new ClassCastException(context.toString() + " must implement BluetoothDeviceSelectedListener");
         }
