@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -14,6 +15,8 @@ import com.example.airloaf.bluetoothrccar.fragments.ControlDirectionsFragment;
 import java.io.IOException;
 
 public class ControlActivity extends AppCompatActivity implements ControlDirectionsFragment.ControlListener {
+
+    public static final String TAG = "RC_CONTROL_ACTIVITY";
 
     private BluetoothSocket mSocket;
 
@@ -28,23 +31,17 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
         mSocket = null;
         mToggle = true;
 
-        // Load the Control fragment to the frame layout
-        loadDirectionFragment();
+        if(savedInstanceState == null) {
+            // Load the Control fragment to the frame layout
+            loadDirectionFragment();
 
-        // Set buttons up
-        setupButtons();
+            // Set buttons up
+            setupButtons();
+        }
 
         getBluetoothSocket();
 
     }
-//
-//    @Override
-//    protected void onStart(){
-//        super.onStart();
-//
-//        getBluetoothSocket();
-//
-//    }
 
     private void setupButtons(){
         ImageButton button = findViewById(R.id.toggle_button);
@@ -70,6 +67,13 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
     private void getBluetoothSocket(){
         // Gets the Bluetooth socket statically
         mSocket = MainActivity.BLUETOOTH_SOCKET;
+
+        Log.d(TAG, "Getting Bluetooth Socket");
+
+        if(mSocket == null){
+            Log.d(TAG, "SOCKET IS NULL");
+        }
+
     }
 
     @Override
@@ -95,7 +99,10 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
             mSocket.getOutputStream().write(msg.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d(TAG, "Could not write to output stream");
         }
     }
+
+
 
 }

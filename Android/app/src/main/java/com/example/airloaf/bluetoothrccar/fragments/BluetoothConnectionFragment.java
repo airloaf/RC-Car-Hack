@@ -6,7 +6,9 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,21 +26,27 @@ import java.util.UUID;
  */
 public class BluetoothConnectionFragment extends Fragment {
 
+    public static final String TAG = "RC_BLUETOOTH_CONNECTION";
+
     // Listener for the activity
     private BluetoothConnectionListener mListener;
 
     // MAC Address for the bluetooth device to connect to
     private String mBluetoothAddress;
 
+    private final String ADDRESS_KEY = "MAC_ADDRESS";
+
     // Bluetooth socket for connection with the bluetooth device
     private BluetoothSocket mSocket;
 
+    private ConnectBluetooth mConnectBluetooth;
+
+    /**
+     * Sets the MAC address of the bluetooth device to connect to
+     * @param address the MAC address of the device
+     */
     public void setBluetoothAddress(String address){
         mBluetoothAddress = address;
-    }
-
-    public String getBluetoothAddress(){
-        return mBluetoothAddress;
     }
 
     public BluetoothConnectionFragment(){
@@ -65,25 +73,61 @@ public class BluetoothConnectionFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-
         // Creates the appropriate view for the fragment
-        View view =  inflater.inflate(R.layout.fragment_bluetooth_connection, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_bluetooth_connection, container, false);
     }
 
+    /**
+     * Check if there was a previous state for the fragment. If so load the mac address
+     *
+     * @param savedInstanceState previous state of the fragment
+     */
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        new ConnectBluetooth().execute();
+        // Check if there was a previous state, then load the key
+        if(savedInstanceState != null) {
+            mBluetoothAddress = savedInstanceState.getString(ADDRESS_KEY);
+        }
 
+    }
+
+    /**
+     * Saves the mac address of the bluetooth device
+     *
+     * @param outState The state information of the fragment before it gets destroyed
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Put the mac address into the bundle for orientation changes
+        outState.putString(ADDRESS_KEY, mBluetoothAddress);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Creates new task and executes
+        mConnectBluetooth = new ConnectBluetooth();
+        mConnectBluetooth.execute();
+
+        Log.d(TAG, "STARTING TASK");
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        Log.d(TAG, "STOPPING TASK");
+
+        mConnectBluetooth.cancel(true);
+        mConnectBluetooth = null;
     }
 
     /**
