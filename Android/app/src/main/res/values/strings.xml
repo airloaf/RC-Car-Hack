@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Bluetooth RC Car</string>
-    <string name="choose_device_text">Choose Bluetooth Device</string>
 
-    <string name="bluetooth_connect_clean_text">Connecting to</string>
+    <string name="choose_device_text">Choose Bluetooth Device</string>
+    <string name="connecting_to_device">Connecting to</string>
+    <string name="connection_failed">Connection Failed</string>
+
+    <string name="bluetooth_connect_clean_text">Testing Connection to</string>
 
 </resources>

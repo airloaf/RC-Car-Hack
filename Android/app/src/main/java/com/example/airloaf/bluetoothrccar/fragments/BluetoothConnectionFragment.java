@@ -82,24 +82,15 @@ public class BluetoothConnectionFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        setupText();
-
         new ConnectBluetooth().execute();
 
-    }
-
-    // Sets the text to "Connecting to {BLUETOOTH_ADDRESS}"
-    private void setupText(){
-        TextView connectionText = getActivity().findViewById(R.id.bluetooth_connect_text);
-        String addressText = getString(R.string.bluetooth_connect_clean_text) + " " + mBluetoothAddress;
-        connectionText.setText(addressText);
     }
 
     /**
      * Interface for returning connection results
      */
     public interface BluetoothConnectionListener{
-        void onConnectionResult(BluetoothConnectionStatus status);
+        void onConnectionResult(BluetoothConnectionStatus status, BluetoothSocket socket);
     }
 
     /**
@@ -160,7 +151,7 @@ public class BluetoothConnectionFragment extends Fragment {
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
 
-            mListener.onConnectionResult(mStatus);
+            mListener.onConnectionResult(mStatus, mSocket);
 
         }
 

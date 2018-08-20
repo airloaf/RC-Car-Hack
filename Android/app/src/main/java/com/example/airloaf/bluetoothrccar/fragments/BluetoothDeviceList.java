@@ -149,7 +149,7 @@ public class BluetoothDeviceList extends ListFragment implements ListView.OnItem
         BluetoothDeviceInfo deviceInfo = (BluetoothDeviceInfo) adapterView.getItemAtPosition(position);
 
         // Notify listener of the bluetooth address
-        mListener.onBluetoothDeviceSelected(deviceInfo.getAddress());
+        mListener.onBluetoothDeviceSelected(deviceInfo.getName(), deviceInfo.getAddress());
 
     }
 
@@ -157,7 +157,7 @@ public class BluetoothDeviceList extends ListFragment implements ListView.OnItem
      * This Interface is used to communicate when a bluetooth device has been chosen
      */
     public interface BluetoothDeviceSelectedListener {
-        void onBluetoothDeviceSelected(String address); // returns the MAC address of the bluetooth device chosen
+        void onBluetoothDeviceSelected(String name, String address); // returns the MAC address of the bluetooth device chosen
     }
 
 }
