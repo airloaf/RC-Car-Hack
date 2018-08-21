@@ -7,4 +7,15 @@
 
     <string name="bluetooth_connect_clean_text">Testing Connection to</string>
 
+    <string name="motor_row_type">Type:</string>
+    <string name="motor_row_pin">Pin:</string>
+
+    <string name="json_motor_array">motors</string>
+    <string name="json_motor_type">type</string>
+    <string name="json_motor_pin">pin</string>
+    <string name="json_motor_enabled">enabled</string>
+
+    <string name="extra_bluetooth_address">address</string>
+
+
 </resources>
