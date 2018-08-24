@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -75,7 +76,7 @@ public class MotorInfoAdapter extends BaseAdapter implements ListAdapter {
         typeText.setText(type);
         pinText.setText(pin);
 
-        ImageButton deleteButton = listItem.findViewById(R.id.button_delete_item);
+        ImageView deleteButton = listItem.findViewById(R.id.button_delete_item);
         Switch enableSwitch = listItem.findViewById(R.id.enable_switch);
 
         enableSwitch.setChecked(currentMotor.isEnabled());

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.airloaf.bluetoothrccar.R;
 import com.example.airloaf.bluetoothrccar.fragments.ControlDirectionsFragment;
@@ -26,6 +27,8 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
 
     // Toggle status
     private boolean mToggle;
+
+    private TextView mSpeedText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -105,6 +108,27 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
                 Intent intent = new Intent(view.getContext(), SettingsActivity.class);
                 intent.putExtra(getString(R.string.extra_bluetooth_address), mSocket.getRemoteDevice().getAddress());
                 startActivityForResult(intent, 1);
+
+            }
+        });
+
+        mSpeedText = findViewById(R.id.speed_text);
+
+        SeekBar speedSeekBar = findViewById(R.id.speed_seekbar);
+        speedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                String speedText = getString(R.string.speed_text) + i + "";
+                mSpeedText.setText(speedText);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });
