@@ -2,23 +2,23 @@ package com.example.airloaf.bluetoothrccar.activities;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.airloaf.bluetoothrccar.R;
 import com.example.airloaf.bluetoothrccar.fragments.ControlDirectionsFragment;
+import com.example.airloaf.bluetoothrccar.fragments.ControlDirectionsFragment.Direction;
+import com.example.airloaf.bluetoothrccar.fragments.ControlDirectionsFragment.ControlListener;
+import com.example.airloaf.bluetoothrccar.framework.ArduinoCommandCreator;
 
 import java.io.IOException;
 
-public class ControlActivity extends AppCompatActivity implements ControlDirectionsFragment.ControlListener {
+public class ControlActivity extends AppCompatActivity implements ControlListener {
 
     public static final String TAG = "RC_CONTROL_ACTIVITY";
 
@@ -28,7 +28,14 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
     // Toggle status
     private boolean mToggle;
 
+    // Text for the speed
     private TextView mSpeedText;
+
+    // Directions pressed and set
+    private boolean mUp;
+    private boolean mDown;
+    private boolean mLeft;
+    private boolean mRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -117,9 +124,11 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
         SeekBar speedSeekBar = findViewById(R.id.speed_seekbar);
         speedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                String speedText = getString(R.string.speed_text) + i + "";
+            public void onProgressChanged(SeekBar seekBar, int speed, boolean b) {
+                // Set the speed text
+                String speedText = getString(R.string.speed_text) + speed + "";
                 mSpeedText.setText(speedText);
+
             }
 
             @Override
@@ -129,7 +138,11 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                int speed = seekBar.getProgress();
 
+                // Generate and send arduino command
+                String arduinoCommand = ArduinoCommandCreator.generateSetSpeed(speed);
+                sendBluetoothMessage(arduinoCommand);
             }
         });
 
@@ -145,21 +158,86 @@ public class ControlActivity extends AppCompatActivity implements ControlDirecti
     }
 
     @Override
-    public void directionPressed(ControlDirectionsFragment.Direction direction) {
-        switch(direction){
+    public void directionPressed(Direction direction) {
+        switch(direction) {
             case UP:
-                sendBluetoothMessage("up");
+                mDown = false;
+                mUp = !mToggle || !mUp;
                 break;
             case DOWN:
-                sendBluetoothMessage("down");
+                mUp = false;
+                mDown = !mToggle || !mDown;
                 break;
             case LEFT:
-                sendBluetoothMessage("left");
+                mRight = false;
+                mLeft = !mToggle || !mLeft;
                 break;
             case RIGHT:
-                sendBluetoothMessage("right");
+                mLeft = false;
+                mRight = !mToggle || !mRight;
                 break;
         }
+        notifyDirectionChange(direction);
+    }
+
+    @Override
+    public void directionReleased(Direction direction) {
+        if(!mToggle){
+            switch(direction){
+                case UP:
+                    mUp = false;
+                    break;
+                case DOWN:
+                    mDown = false;
+                    break;
+                case LEFT:
+                    mLeft = false;
+                    break;
+                case RIGHT:
+                    mRight = false;
+                    break;
+            }
+
+            notifyDirectionChange(direction);
+        }
+    }
+
+    private void notifyDirectionChange(Direction direction){
+        String command = "";
+
+        switch(direction){
+            case UP:
+                if(mUp){
+                    command = ArduinoCommandCreator.generateSetDriveDirection("forward");
+                }else{
+                    command = ArduinoCommandCreator.generateSetDriveDirection("release");
+                }
+                break;
+            case DOWN:
+                if(mDown){
+                    command = ArduinoCommandCreator.generateSetDriveDirection("backward");
+                }else{
+                    command = ArduinoCommandCreator.generateSetDriveDirection("release");
+                }
+                break;
+            case LEFT:
+                if(mLeft){
+                    command = ArduinoCommandCreator.generateSetSteerDirection("left");
+                }else{
+                    command = ArduinoCommandCreator.generateSetSteerDirection("release");
+                }
+                break;
+            case RIGHT:
+                if(mRight){
+                    command = ArduinoCommandCreator.generateSetSteerDirection("right");
+                }else{
+                    command = ArduinoCommandCreator.generateSetSteerDirection("release");
+                }
+                break;
+        }
+
+        sendBluetoothMessage(command);
+
     }
 
     @Override
