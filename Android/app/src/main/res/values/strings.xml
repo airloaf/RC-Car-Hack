@@ -7,39 +7,4 @@
 
     <string name="bluetooth_connect_clean_text">Testing Connection to</string>
 
-    <string name="motor_row_type">Type:</string>
-    <string name="motor_row_pin">Pin:</string>
-
-    <string name="json_motor_array">motors</string>
-    <string name="json_motor_type">type</string>
-    <string name="json_motor_pin">pin</string>
-    <string name="json_motor_enabled">enabled</string>
-
-    <string name="extra_bluetooth_address">address</string>
-
-    <string name="tv_motor_type">Motor Type:</string>
-    <string name="tv_motor_pin">Arduino Pin:</string>
-    <string name="switch_motor_enable">Enabled </string>
-
-    <string name="dialog_motor_positive">Ok</string>
-    <string name="dialog_motor_negative">Cancel</string>
-
-    <string name="bt_back_motor">Back</string>
-    <string name="bt_add_motor">Add</string>
-    <string name="bt_save_motor">Save</string>
-
-    <string name="speed_text">Speed: </string>
-
-    <string-array name="spinner_motor_type">
-        <item>drive</item>
-        <item>steer</item>
-    </string-array>
-
-    <string-array name="spinner_motor_pin">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
 </resources>
