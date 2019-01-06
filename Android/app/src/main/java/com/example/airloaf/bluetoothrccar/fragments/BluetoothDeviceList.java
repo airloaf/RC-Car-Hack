@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,19 +30,12 @@ import java.util.Set;
  */
 public class BluetoothDeviceList extends ListFragment implements ListView.OnItemClickListener {
 
-    // Debug TAG for logging
-    public static final String TAG = "RC_CAR_BLUETOOTH_DEVICE_LIST";
-
-    // Request bit for bluetooth
     public static final int REQUEST_ENABLE_BT = 88;
 
-    // Main activity reference as listener
     private BluetoothDeviceSelectedListener mListener;
 
-    // Bluetooth adapter for querying paired devices
     private BluetoothAdapter mBluetoothAdapter;
 
-    // List of bluetooth devices
     private List<BluetoothDeviceInfo> mBluetoothDevices;
 
     @Override
@@ -69,26 +61,25 @@ public class BluetoothDeviceList extends ListFragment implements ListView.OnItem
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "Fragment created");
-
         mBluetoothAdapter = null;
         mBluetoothDevices = null;
 
         setupBluetooth();
+        queryBluetoothDevices();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.fragment_bluetooth_device_list, container, false);
+
+        View view =  inflater.inflate(R.layout.fragment_bluetooth_device_list, container, false);
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        // Get devices and add to list
-        queryBluetoothDevices();
         addDevicesToList();
     }
 
